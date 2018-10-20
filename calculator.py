@@ -5,7 +5,6 @@ import sys
 
 class Config:
     def __init__(self, configfile):
-        self.configdata = {}
         self.configdata = self.readconfigfile(configfile)
 
     def readconfigfile(self, path):
@@ -17,7 +16,6 @@ class Config:
             with open(path, 'r') as f:
                 for line in f.readlines():
                     arg_list = line.split('=')
-                    print(arg_list)
                     try:
                         configparas[arg_list[0].strip()] = float(arg_list[1].strip())
                     except NameError:
