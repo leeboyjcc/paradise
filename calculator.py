@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 import os
 import csv
 import sys
@@ -112,7 +113,7 @@ if __name__ == '__main__':
             '{:.2f}'.format(postincome)
         process_data.append(tuple_data)
 
-    print(process_data)
+    #print(process_data)
     csvwriter = csv.writer(open(cmdarg.get_exportfile(), 'w'))
     csvwriter.writerows(process_data)
 
