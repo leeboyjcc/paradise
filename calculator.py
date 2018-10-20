@@ -17,6 +17,7 @@ class Config:
             with open(path, 'r') as f:
                 for line in f.readlines():
                     arg_list = line.split('=')
+                    print(arg_list)
                     try:
                         configparas[arg_list[0].strip()] = float(arg_list[1].strip())
                     except NameError:
