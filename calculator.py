@@ -2,6 +2,9 @@ import os
 import csv
 import sys
 from multiprocessing import Process, Queue
+import getopt
+import configparser
+from datetime import  datetime
 
 
 class Config:
@@ -88,24 +91,30 @@ def calculate_tax(value):
     return tax
 
 
-def readdata(q1, v_cmdarg):
-    print('this is process 1 for read user id and income, process id {}'.format(os.getpid()))
-    gzdata = UserData(v_cmdarg.get_datafile())
+def readdata(q1, v_userdatapath):
+    # print('this is process 1 for read user id and income, process id {}'.format(os.getpid()))
+    gzdata = UserData(v_userdatapath)
     q1.put(gzdata)
 
 
-def processdata(q1, q2, v_cmdarg):
-    print('this is process 2 for calculate user income data, process id {}'.format(os.getpid()))
-    gzdata = q1.get()
-    shebaodata = Config(v_cmdarg.get_cfgfile())
+def processdata(q1, q2, v_configfilepath, v_cityname):
+    # print('this is process 2 for calculate user income data, process id {}'.format(os.getpid()))
+    gzdata = q1.get()  # get user id and income data from queue1
     process_data = []
-    shebaototalratio = shebaodata.get_config('YangLao') + shebaodata.get_config('YiLiao') + \
-        shebaodata.get_config('ShiYe') + shebaodata.get_config('GongShang') + \
-        shebaodata.get_config('ShengYu') + shebaodata.get_config('GongJiJin')
+
+    # get shebao data from configfile
+    cnf = configparser.ConfigParser()
+    cnf.read(v_configfilepath)
+    cityname = v_cityname.upper()  # city name ignore case
+
+    shebaototalratio = cnf.getfloat(cityname, 'YangLao') + cnf.getfloat(cityname, 'YiLiao') +\
+        cnf.getfloat(cityname, 'ShiYe') + cnf.getfloat(cityname, 'GongShang') +\
+        cnf.getfloat(cityname, 'ShengYu') + cnf.getfloat(cityname, 'GongJiJin')
+    shebaohigh = cnf.getfloat(cityname, 'JiShuH')
+    shebaolow = cnf.getfloat(cityname, 'JiShuL')
+
     for onedata in gzdata.userdata:
         income = onedata[1]
-        shebaohigh = shebaodata.get_config('JiShuH')
-        shebaolow = shebaodata.get_config('JiShuL')
         if income >= shebaohigh:
             shebaobase = shebaohigh
         elif income <= shebaolow:
@@ -117,28 +126,52 @@ def processdata(q1, q2, v_cmdarg):
         yintax = calculate_tax(yincome)
         postincome = income - shebaoje - yintax
         tuple_data = onedata[0], onedata[1], '{:.2f}'.format(shebaoje), '{:.2f}'.format(yintax), '{:.2f}'.format(
-            postincome)
+            postincome), datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         process_data.append(tuple_data)
-    q2.put(process_data)
+    q2.put(process_data)  # put the calculated data on queue2
 
 
-def exportdata(q2, v_cmdarg):
-    print('this is process 3 for export calculated data to csv file, process id {}'.format(os.getpid()))
+def exportdata(q2, v_gzexportpath):
+    # print('this is process 3 for export calculated data to csv file, process id {}'.format(os.getpid()))
     processdataq2 = q2.get()
-    exportpath = v_cmdarg.get_exportfile()
-    csvexport = csv.writer(open(exportpath, 'w'))
+    csvexport = csv.writer(open(v_gzexportpath, 'w'))
     csvexport.writerows(processdataq2)
 
 
+def usage():
+    print('Usage: calculator.py -C cityname -c configfile -d userdata -o resultdata')
+
+
 def main():
-    cmdarg = Arg()
+    try:
+        opts, args = getopt.getopt(sys.argv[1:], "hC:c:d:o:", ["help"])
+    except getopt.GetoptError as err:
+        print(str(err))
+        sys.exit(1)
+    cityname = 'DEFAULT'
+    for option, optvalue in opts:
+        if option in ("-h", "--help"):
+            usage()
+            sys.exit(0)
+        elif option == "-C":
+            cityname = optvalue
+        elif option == "-c":
+            configfilepath = optvalue
+        elif option == "-d":
+            userdatapath = optvalue
+        elif option == "-o":
+            gzexportpath = optvalue
+        else:
+            assert False, "Unhandled option"
+
+    # cmdarg = Arg()
     queue1 = Queue()  # store user id and income data
     queue2 = Queue()  # store calculated data
-    Process(target=readdata, args=(queue1, cmdarg)).start()
-    Process(target=processdata, args=(queue1, queue2, cmdarg)).start()
-    Process(target=exportdata, args=(queue2, cmdarg)).start()
+    Process(target=readdata, args=(queue1, userdatapath)).start()
+    Process(target=processdata, args=(queue1, queue2, configfilepath, cityname)).start()
+    Process(target=exportdata, args=(queue2, gzexportpath)).start()
 
 
 if __name__ == '__main__':
-    print('this is main process for auxliary, process id {}'.format(os.getpid()))
+    #print('this is main process for auxliary, process id {}'.format(os.getpid()))
     main()
