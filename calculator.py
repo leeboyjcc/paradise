@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 import os
 import csv
 import sys
@@ -97,9 +98,9 @@ def readdata(q1, v_userdatapath):
     q1.put(gzdata)
 
 
-def processdata(q1, q2, v_configfilepath, v_cityname):
+def processdata(q1, q2, v_cmdarg):
     # print('this is process 2 for calculate user income data, process id {}'.format(os.getpid()))
-    gzdata = q1.get()  # get user id and income data from queue1
+    gzdata = q1.get()
     process_data = []
 
     # get shebao data from configfile
@@ -173,5 +174,5 @@ def main():
 
 
 if __name__ == '__main__':
-    #print('this is main process for auxliary, process id {}'.format(os.getpid()))
+    # print('this is main process for auxliary, process id {}'.format(os.getpid()))
     main()
