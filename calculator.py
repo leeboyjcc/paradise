@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 import os
 import csv
 import sys
@@ -89,13 +90,13 @@ def calculate_tax(value):
 
 
 def readdata(q1, v_cmdarg):
-    print('this is process 1 for read user id and income, process id {}'.format(os.getpid()))
+    #print('this is process 1 for read user id and income, process id {}'.format(os.getpid()))
     gzdata = UserData(v_cmdarg.get_datafile())
     q1.put(gzdata)
 
 
 def processdata(q1, q2, v_cmdarg):
-    print('this is process 2 for calculate user income data, process id {}'.format(os.getpid()))
+    #print('this is process 2 for calculate user income data, process id {}'.format(os.getpid()))
     gzdata = q1.get()
     shebaodata = Config(v_cmdarg.get_cfgfile())
     process_data = []
@@ -123,7 +124,7 @@ def processdata(q1, q2, v_cmdarg):
 
 
 def exportdata(q2, v_cmdarg):
-    print('this is process 3 for export calculated data to csv file, process id {}'.format(os.getpid()))
+    #print('this is process 3 for export calculated data to csv file, process id {}'.format(os.getpid()))
     processdataq2 = q2.get()
     exportpath = v_cmdarg.get_exportfile()
     csvexport = csv.writer(open(exportpath, 'w'))
@@ -140,5 +141,5 @@ def main():
 
 
 if __name__ == '__main__':
-    print('this is main process for auxliary, process id {}'.format(os.getpid()))
+    #print('this is main process for auxliary, process id {}'.format(os.getpid()))
     main()
