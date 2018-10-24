@@ -1,0 +1,7 @@
+{% macro displayfilecontent(filecontent) %}
+    <div>
+        <h3>title: {{ filecontent.title }}</h3>
+        <h4>created_time: {{ filecontent.created_time }}</h4>
+        <p>content: {{ filecontent.content }}</p>
+    </div>
+{% endmacro %}
