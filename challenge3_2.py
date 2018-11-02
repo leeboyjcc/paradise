@@ -28,8 +28,8 @@ def split():
     ws = wb['combine']
 
     year = set()
-    for row in ws.iter_rows(min_row=2,max_row=ws.max_row) #过滤掉首行标题
-        year.add(str(item.value)[:4])
+    for row in ws.iter_rows(min_row=2,max_row=ws.max_row): #过滤掉首行标题
+        year.add(str(row[0].value)[:4])
 
     for y in year:
         fn = '/home/shiyanlou/Code/{}.xlsx'.format(y)
@@ -37,15 +37,12 @@ def split():
         ws_year = wb_year.active
         ws_year.title = y
         
-        firstline = [cell.value for ce in ws_year.iter_rows(min_row=1, max_row=1)]
-        for item in firstline:
-            ws_year.append(item)
+        for row in ws_year.iter_rows(min_row=1, max_row=1):
+            ws_year.append([cell.value for cell in row]) # 直接添加list
 
         for row in ws_year.iter_rows(min_row=2, max_row=ws.max_row):
-            row_to_append = [cell.value for cell in row]
-            if str(cell.value)[:4] == y:
-                for item in row_to_append:
-                    ws_year.append(item)
+            if str(row[0].value)[:4] == y:
+                    ws_year.append([cell.value for cell in row])
 
         wb_year.save(fn)
 
