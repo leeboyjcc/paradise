@@ -13,15 +13,17 @@ def parse(response):
     for comment in response.css('div.comment-list-item'):
         result = {}
         result['username'] = comment.xpath('.//div[@class="user-username"]/a/text()').re_first(r'\s*(\S*)\s*')
-        result['content'] = comment.xpath('.//div[@class="comment-item-content"]/p/text()').extract_first()
+        result['content'] = comment.xpath('.//div[contains(@class,"comment-item-content")]/p/text()').extract_first()
         results.append(result)
 
 def has_next_page(response):
-    next_page = response.xpath('//ul[@class="pagination"]/li[@class="disabled"]').extract()
-    print(len(response.xpath('//ul[@class="pagination"]')))
-    print(response.xpath('//ul[@class="pagination"]').extract())
-    print('*'*30)
-    if len(next_page) == 1 and (response.xpath('//ul[@class="pagination"]/li[@class="disabled"]/text()').extract_first() == '下一页'):
+    #next_page = response.xpath('//div[@id="question"]/div[@class="pagination-container"]/ul[@class="pagination"]/li[@class="disabled"]').extract()
+    #print(len(response.xpath('//div[@id="questions"]/div[@class="pagination-container"]/ul[@class="pagination"]')))
+    #print(response.xpath('//div[@id="questions"]/div[@class="pagination-container"]/ul[@class="pagination"]'))
+    #print(response.xpath('//div[@id="questions"]/div[@class="pagination-container"]/ul[@class="pagination"]/li[7]').extract())
+    #print(response.xpath('//div[@id="questions"]/div[@class="pagination-container"]/ul[@class="pagination"]/li[contains(@class,"disabled")]').extract())
+    next_page = response.xpath('//div[@id="questions"]/div[@class="pagination-container"]/ul[@class="pagination"]/li[contains(@class,"disabled")]/a/text()').extract_first()
+    if next_page == '下一页':
         return False
     else:
         return True
@@ -57,6 +59,8 @@ def spider():
         goto_next_page(driver)
 
     print(results)
+    with open('/home/shiyanlou/comments.json','w') as f:
+        f.write(json.dumps(results))
 
 
 if __name__=='__main__':
