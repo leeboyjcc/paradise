@@ -1,0 +1,7 @@
+{% macro displayfilecontent(f) %}
+    <div>
+        <p>content: {{ f.content }}</p>
+        <p>created_time: {{ f.created_time.strftime('%Y-%m-%d %H:%M:%S') }}</p>
+        <p>category: {{ f.category.name }}</p>
+    </div>
+{% endmacro %}
