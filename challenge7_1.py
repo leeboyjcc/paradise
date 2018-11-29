@@ -40,7 +40,7 @@ def co2():
     df_min.set_index('Income group', inplace=True)
     df_min.columns = ['Lowest emissions', 'Lowest emission country']
     df_min =  df_min.reindex(columns=['Lowest emission country', 'Lowest emissions'])
-
+    # 按列合并两个DataFrame
     return pd.concat([df_sum, df_max, df_min], axis=1)
     
 
