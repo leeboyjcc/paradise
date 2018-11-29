@@ -13,6 +13,7 @@ def co2_gdp_plot():
     co2data.replace({'..':pd.np.NaN}, inplace=True)
     co2data = co2data.fillna(method='ffill', axis=1).fillna(method='bfill', axis=1)
 
+    # 对数据中全行或全列为NaN的数据进行填充0
     co2data = co2data.fillna(0)
     co2data['CO2-SUM'] = co2data.sum(axis=1)
     co2data = co2data['CO2-SUM']
@@ -43,7 +44,7 @@ def co2_gdp_plot():
             five_position.append(i)
 
     fig = plt.subplot()
-    gdp_co2.plot(kind='line', title='GDP-CO2',ax=fig)
+    gdp_co2.plot(kind='line', title='GDP-CO2', ax=fig)
     plt.xlabel('Countries')
     plt.ylabel('Values')
     plt.xticks(five_position, five_labels, rotation='vertical')
