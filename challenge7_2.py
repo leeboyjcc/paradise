@@ -36,7 +36,9 @@ def co2_gdp_plot():
     china = [np.round(i, decimals=3).tolist() for i in list(gdp_co2.loc['CHN'].values)]
 
     five = ['CHN', 'USA', 'GBR', 'FRA','RUS']
+    # 在数据中的标签
     five_labels = []
+    # 在数据中的刻度
     five_position = []
     for i in range(len(gdp_co2)):
         if gdp_co2.index[i] in five:
