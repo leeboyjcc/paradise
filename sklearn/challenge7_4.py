@@ -14,15 +14,20 @@ def Temperature():
 
     combine = pd.concat([gas, co2, temperature], axis=1)
     feature = combine.iloc[:, 0:4]
+    # 按列进行填充
     feature = feature.fillna(method='ffill').fillna(method='bfill')
 
+    # 特征训练数据
     feature_train = feature.loc[1960:2010]
+    # 特征预测数据
     feature_test = feature.loc[2011:2017]
 
+    # 目标训练数据
     target_median_train = combine.loc[1960:2010, 'Median']
     #median = linear_model.LinearRegression()
     median = linear_model.BayesianRidge()
     median.fit(feature_train, target_median_train)
+    # 目标预测结果
     MedianPredict = median.predict(feature_test)
     MedianPredict = [round(i, 3) for i in MedianPredict.tolist()]
 
