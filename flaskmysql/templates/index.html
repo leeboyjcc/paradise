@@ -1,0 +1,6 @@
+<p>文章名称</p>
+<ul>
+    {% for item in files %}
+    <li><a href="files/{{ item.id }}">{{ item.title }}</a></li>
+    {% endfor %}
+</ul>
