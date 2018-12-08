@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+
+{% block content %}
+    {% for item in files %}
+    <a href="files/{{ item.id }}">文章标题: {{ item.title }}</a>
+        {% for tag in item.tags %}
+            <li>标签: {{ tag['tag'] }}</li>
+        {% endfor %}
+    {% endfor %}
+{% endblock %}
