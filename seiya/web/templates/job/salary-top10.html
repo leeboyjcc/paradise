@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+
+{% block title %}Seiya data analysis - Salary Top10 cities {% endblock %}
+
+{% block content %}
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="/">index</a></li>
+        <li class="breadcrumb-item"><a href="/job">lagou job analysis</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Salary Top10 cities</li>
+    </ol> 
+</nav>
+<div class="my-5" id="chart"></div>
+
+<table class="table table-striped my-5">
+    <thead>
+        <tr>
+            <th scope="col">Rank</th>
+            <th scope="col">City</th>
+            <th scope="col">Salary</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for row in rows %}
+        <tr>
+            <th scope="row">{{loop.index}}</th>
+            <td>{{row.city}}</td>
+            <td>{{row.salary}}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}
+
+{% block js %}
+{{super()}}
+<script>
+/*
+$.getJSON('/job/salary-top10.json', function (data) {
+    var chart = new G2.Chart({
+        container: 'chart',
+        forceFit: true,
+        height: 500
+    });
+    chart.source(data);
+    chart.interval().position('city*salary');
+    chart.render();
+})
+*/
+var data = {{rows|tojson|safe}};
+var chart = new G2.Chart({
+        container: 'chart',
+        forceFit: true,
+        height: 500
+    });
+    chart.source(data);
+    chart.interval().position('city*salary');
+    chart.render();
+</script>
+{% endblock %}

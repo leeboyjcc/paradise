@@ -1,0 +1,41 @@
+{% extends "admin/index.html" %}
+
+{% block title %}
+Admin - messages
+{% endblock %}
+
+{% block admin %}
+<div id="message-box"></div>
+        <div class="input-group" id="message-form">
+            <input type="text" class="form-control" onkeydown="emit()">
+            <span class="input-group-btn">
+                <button class="btn btn-primary" type="button">发言</button>
+            </span>
+        </div>
+{% endblock %}
+
+{% block tail_js %}
+{{super()}}
+<script>
+    var outbox = new WebSocket('ws://' + location.host + "/ws/send");
+    $("#message-form button").on("click", function(event) {
+        text = $('#message-form input').val();
+        username = 'System: ';
+        outbox.send(JSON.stringify({username: username, text: text}));
+        $('#message-form input').val('');
+    })
+
+    function emit() {
+        if (event.key == "Enter") {
+            text = $('#message-form input').val();
+            username = $('#username').text();
+            outbox.send(JSON.stringify({username: username, text: text}));
+            $('#message-form input').val('');
+        }
+    }
+
+    outbox.onclose = function() {
+        this.outbox = new WebSocket('ws://' + location.host + "/ws/send");
+    }
+</script>
+{% endblock %}

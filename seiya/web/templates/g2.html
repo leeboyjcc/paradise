@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block title %}Seiya data analysis system - G2 demo{% endblock %}
+
+{% block content %}
+<nav aria-label="breadcrumb">
+	<ol class="breadcrumb">
+		<li class="breadcrumb-item"><a href="/">index</a></li>
+		<li class="breadcrumb-item active" aria-current="page">G2 demo</li>
+	</ol> 
+</nav>
+<div class="my-5" id="chart"></div>
+{% endblock %}
+
+{% block js %}
+{{super()}}
+<script>
+var data = [
+{year: '1951', sales: 38},
+{year: '1952', sales: 52},
+{year: '1956', sales: 61},
+{year: '1957', sales: 145},
+{year: '1958', sales: 48},
+{year: '1959', sales: 38},
+{year: '1960', sales: 38},
+{year: '1962', sales: 38},
+]
+var chart = new G2.Chart({
+	container: 'chart',
+	forceFit: true,
+	height: 500
+});
+chart.source(data);
+chart.scale('sales', {
+	tickInterval: 20
+});
+chart.interval().position('year*sales');
+
+chart.render();
+</script>
+{% endblock %}
