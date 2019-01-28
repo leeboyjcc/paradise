@@ -1,0 +1,30 @@
+.form {
+    width: 200px;
+    margin: 0 auto;
+}
+
+a,
+a:hover,
+a:visited {
+    cursor: pointer;
+    text-decoration: none ;
+}
+.course img {
+    height: 160px ;
+}
+
+.course__name,
+.course__decription {
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap
+}
+
+
+
+.nav-pagination {
+    text-align: center;
+}
+body {
+	background-color: powderblue;
+}

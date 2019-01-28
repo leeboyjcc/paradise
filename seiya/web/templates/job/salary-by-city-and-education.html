@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+
+{% block title %}Seiya data analysis - Salary compare with same education and different city {% endblock %}
+
+{% block content %}
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="/">index</a></li>
+        <li class="breadcrumb-item"><a href="/job">lagou job analysis</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Salary compare with same education and different city</li>
+    </ol> 
+</nav>
+
+<div class="my-5" id="chart"></div>
+
+{% endblock %}
+
+{% block js %}
+{{super()}}
+<script>
+/*
+$.getJSON('/job/salary-by-city-and-education.json', function (data) {
+    var chart = new G2.Chart({
+        container: 'chart',
+        forceFit: true,
+        height: 500
+    });
+
+    data.forEach(v => {
+        v.salary = +v.salary.toFixed(3);
+    });
+    chart.source(data);
+    chart.tooltip({
+        crosshairs: {
+            type: 'line'
+        }
+        });
+    chart.axis('salary', {
+        label: {
+            formatter: function formatter(val) {
+                return val + 'K';
+            }
+        }
+    });
+    chart.line().position('city*salary').color('education');
+    chart.point().position('city*salary').color('education').size(4).shape('circle').style({
+        stroke: '#fff',
+        lineWidth: 1
+    });
+    chart.render();
+})
+*/
+var data = {{rows|tojson|safe}};
+var chart = new G2.Chart({
+        container: 'chart',
+        forceFit: true,
+        height: 500
+    });
+
+    data.forEach(v => {
+        v.salary = +v.salary.toFixed(3);
+    });
+    chart.source(data);
+    chart.tooltip({
+        crosshairs: {
+            type: 'line'
+        }
+        });
+    chart.axis('salary', {
+        label: {
+            formatter: function formatter(val) {
+                return val + 'K';
+            }
+        }
+    });
+    chart.line().position('city*salary').color('education');
+    chart.point().position('city*salary').color('education').size(4).shape('circle').style({
+        stroke: '#fff',
+        lineWidth: 1
+    });
+    chart.render();
+</script>
+{% endblock %}

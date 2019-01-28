@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+
+{% block title %}Seiya data analysis - Hot Job tags {% endblock %}
+
+{% block content %}
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="/">index</a></li>
+        <li class="breadcrumb-item"><a href="/job">lagou job analysis</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Hot Job tags</li>
+    </ol> 
+</nav>
+<!--
+<div class="my-5" id="chart"></div>
+-->
+
+<div class="text-center my-5">
+    <img src="/job/hot-tags.png">
+</div>
+
+<table class="table table-striped my-5">
+    <thead>
+        <tr>
+            <th scope="col">rank</th>
+            <th scope="col">Job tag</th>
+            <th scope="col">count</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for row in rows %}
+        <tr>
+            <th scope="row">{{loop.index}}</th>
+            <td>{{row.tag}}</td>
+            <td>{{row.count}}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}
+
+{% block js %}
+{{super()}}
+<script>
+/*
+$.getJSON('/job/hot-tags.json', function (data) {
+    var chart = new G2.Chart({
+        container: 'chart',
+        forceFit: true,
+        height: 500
+    });
+    chart.source(data.slice(0,10));
+    chart.interval().position('tag*count');
+    chart.render();
+})
+*/
+</script>
+{% endblock %}

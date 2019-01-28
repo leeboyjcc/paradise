@@ -1,0 +1,6 @@
+{% extends "base.html" %}
+{% from 'macro.html' import displayfilecontent %}
+
+{% block content %}
+    {{ displayfilecontent(fileobject) }}
+{% endblock %}
